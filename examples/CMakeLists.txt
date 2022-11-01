@@ -9,14 +9,7 @@ FetchContent_Declare(
 	matplotlib
 	GIT_REPOSITORY https://github.com/lava/matplotlib-cpp.git
 )
-FetchContent_MakeAvailable(matplotlib)
-FetchContent_GetProperties(matplotlib)
-if(NOT matplotlib_POPULATED)
-	FetchContent_Populate(matplotlib)
-endif()
-include_directories(SYSTEM ${matplotlib_SOURCE_DIR})
 
-include(FetchContent)
 FetchContent_Declare(
 	Eigen
 	GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
@@ -28,10 +21,10 @@ set(EIGEN_BUILD_DOC OFF)
 set(BUILD_TESTING OFF)
 set(EIGEN_BUILD_PKGCONFIG OFF)
 set(EIGEN_LEAVE_TEST_IN_ALL_TARGET OFF)
-FetchContent_MakeAvailable(Eigen)
-MESSAGE( [Main] " EIGEN3_INCLUDE_DIRS = ${EIGEN3_INCLUDE_DIRS}")
-include_directories ( ${EIGEN3_INCLUDE_DIRS} )
 
+FetchContent_MakeAvailable(Eigen, matplotlib)
+
+include_directories ( ${EIGEN3_INCLUDE_DIRS} )
 
 add_executable(dc_motor_cascade_pid "dc_motor_cascade_pid.cpp")
 target_compile_features(dc_motor_cascade_pid PUBLIC cxx_std_17)
