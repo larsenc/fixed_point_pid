@@ -10,10 +10,10 @@ FetchContent_Declare(
 	GIT_REPOSITORY https://github.com/lava/matplotlib-cpp.git
 )
 FetchContent_MakeAvailable(matplotlib)
-#FetchContent_GetProperties(matplotlib)
-#if(NOT matplotlib_POPULATED)
-#	FetchContent_Populate(matplotlib)
-#endif()
+FetchContent_GetProperties(matplotlib)
+if(NOT matplotlib_POPULATED)
+	FetchContent_Populate(matplotlib)
+endif()
 include_directories(SYSTEM ${matplotlib_SOURCE_DIR})
 
 include(FetchContent)
