@@ -27,4 +27,5 @@ PIController<Input_t, Output_t, Kp_t, Ki_t> piController(kp, ki, minOutput, maxO
 The controllers are meant to run on a hard realtime system. Non uniform calls in time to the calculate output function is not supported.
 
 ## Example
-An example implementation and simulation of a cascaded velocity and current controller can be found in the /examples folder.
+An example implementation and simulation of a cascaded velocity and current controller can be found in the /examples folder. The result can be seen below:
+![](examples/dc_motor_cascade_pid_result.png)
