@@ -7,7 +7,7 @@ project(fixed_point_pid
 	HOMEPAGE_URL "https://github.com/larsenc/fixed_point_pid"
 )
 
-option(FIXED_POINT_PID_BUILD_EXAMPLES "Build fixed point pid examples" OFF)
+option(FIXED_POINT_PID_BUILD_EXAMPLES "Build fixed point pid examples" ON)
 
 include(GNUInstallDirs)
 
@@ -32,7 +32,7 @@ if(FIXED_POINT_PID_BUILD_EXAMPLES)
 	add_subdirectory(examples)
 endif()
 
-install(TARGETS fixed_point
+install(TARGETS fixed_point_pid
 	EXPORT ${PROJECT_NAME}_Targets
 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

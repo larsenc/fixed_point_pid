@@ -6,9 +6,11 @@ include_directories(${PYTHON3_INCLUDE_DIRS} ${NumPy_INCLUDE_DIRS})
 
 include(FetchContent)
 FetchContent_Declare(
-	matplotlib
+	matplotlibcpp
 	GIT_REPOSITORY https://github.com/lava/matplotlib-cpp.git
 )
+FetchContent_MakeAvailable(matplotlibcpp)
+include_directories(${matplotlibcpp_SOURCE_DIR})
 
 FetchContent_Declare(
 	Eigen
@@ -21,10 +23,8 @@ set(EIGEN_BUILD_DOC OFF)
 set(BUILD_TESTING OFF)
 set(EIGEN_BUILD_PKGCONFIG OFF)
 set(EIGEN_LEAVE_TEST_IN_ALL_TARGET OFF)
-
-FetchContent_MakeAvailable(Eigen, matplotlib)
-
-include_directories ( ${EIGEN3_INCLUDE_DIRS} )
+FetchContent_MakeAvailable(Eigen)
+include_directories(${EIGEN3_INCLUDE_DIRS})
 
 add_executable(dc_motor_cascade_pid "dc_motor_cascade_pid.cpp")
 target_compile_features(dc_motor_cascade_pid PUBLIC cxx_std_17)
