@@ -1,5 +1,4 @@
 #define WITHOUT_NUMPY
-#define WITH_FLOAT_CONVERSION
 
 #include <fixed_point/scaled_int.hpp>
 #include <fixed_point_pid/pid.hpp>
@@ -86,11 +85,11 @@ int main()
 	typedef scaled_int<7, 8>	CurrentKp_t;
 	typedef scaled_int<2, 13>	CurrentKi_t;
 
-	VoltageOutput_t minVoltageOutput(VoltageOutput_t::unscaled_float_type(-12.0));
-	VoltageOutput_t maxVoltageOutput(VoltageOutput_t::unscaled_float_type(12.0));
+	VoltageOutput_t minVoltageOutput(unscaled_double<5, 10>(-12.0));
+	VoltageOutput_t maxVoltageOutput(unscaled_double<5, 10>(12.0));
 
-	CurrentKp_t ckp(CurrentKp_t::unscaled_float_type(2.0));
-	CurrentKi_t cki(CurrentKi_t::unscaled_float_type(1.0));
+	CurrentKp_t ckp(unscaled_double<7, 8>(2.0));
+	CurrentKi_t cki(unscaled_double<2, 13>(1.0));
 	PIController<CurrentInput_t, VoltageOutput_t, CurrentKp_t, CurrentKi_t> currentPI(ckp, cki, minVoltageOutput, maxVoltageOutput);
 
 	// Speed regulator
@@ -100,11 +99,11 @@ int main()
 	typedef scaled_int<7, 8>	VelocityKp_t;
 	typedef scaled_int<2, 13>	VelocityKi_t;
 
-	CurrentOutput_t minCurrentOutput(CurrentOutput_t::unscaled_float_type(-0.8));
-	CurrentOutput_t maxCurrentOutput(CurrentOutput_t::unscaled_float_type(0.8));
+	CurrentOutput_t minCurrentOutput(unscaled_double<1, 14>(-0.8));
+	CurrentOutput_t maxCurrentOutput(unscaled_double<1, 14>(0.8));
 
-	VelocityKp_t vkp(VelocityKp_t::unscaled_float_type(0.075));
-	VelocityKi_t vki(VelocityKi_t::unscaled_float_type(0.002));
+	VelocityKp_t vkp(unscaled_double<7, 8>(0.075));
+	VelocityKi_t vki(unscaled_double<2, 13>(0.002));
 	PIController<VelocityInput_t, CurrentOutput_t, VelocityKp_t, VelocityKi_t> velocityPI(vkp, vki, minCurrentOutput, maxCurrentOutput);
 
 	const double initialCurrent = 0.0;
@@ -121,7 +120,7 @@ int main()
 	std::vector<double> positions;
 	std::vector<double> voltages;
 
-	VelocityInput_t refVelocity(VelocityInput_t::unscaled_float_type(1.0f));
+	VelocityInput_t refVelocity(unscaled_double<6, 9>(1.0));
 
 	while (t <= tEnd) {
 		states = step(dt, model, states, voltage);
@@ -134,12 +133,12 @@ int main()
 		voltages.push_back(voltage);
 
 		// Calculate inner current PI controller output
-		VelocityInput_t measuredVelocity(VelocityInput_t::unscaled_float_type((float)states[1]));
+		VelocityInput_t measuredVelocity(unscaled_double<6, 9>((double)states[1]));
 		CurrentOutput_t referenceCurrent = velocityPI.calculateOutput(refVelocity, measuredVelocity);
 
 		// Calculate outer velocity PI controller output
-		CurrentInput_t measuredCurrent(CurrentInput_t::unscaled_float_type((float)states[0]));
-		voltage = currentPI.calculateOutput(referenceCurrent, measuredCurrent).unscaleToFloat().value;
+		CurrentInput_t measuredCurrent(unscaled_double<1, 14>((double)states[0]));
+		voltage = currentPI.calculateOutput(referenceCurrent, measuredCurrent).unscale<float>();
 
 		t += dt;
 	}
@@ -157,7 +156,7 @@ int main()
 	plt::plot(ts, velocities);
 	plt::plot(
 		std::vector<double>{0.0, tEnd},
-		std::vector<double>{refVelocity.unscaleToFloat().value, refVelocity.unscaleToFloat().value}
+		std::vector<double>{refVelocity.unscale<double>(), refVelocity.unscale<double>()}
 	);
 
 	plt::subplot(4, 1, 4);

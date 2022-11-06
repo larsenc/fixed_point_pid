@@ -88,7 +88,7 @@ public:
 
 	output_type calculateOutput(const input_type& error, const output_type& outputMin, const output_type& outputMax)
 	{
-		if (!((mSaturation < 0 && error.getValue() < 0) || (mSaturation > 0 && error.getValue() > 0))) {
+		if (!((mSaturation < 0 && error.value() < 0) || (mSaturation > 0 && error.value() > 0))) {
 			mIntegralTerm += (mKi * error).template convert<i_term_type::M, i_term_type::N>();
 		}
 		mSaturation = saturate(
@@ -145,7 +145,7 @@ struct Non
 	template<typename TInput, typename TOutput>
 	TOutput calculateOutput(const TInput&, const TOutput&, const TOutput&)
 	{
-		return TOutput(0);
+		return TOutput(typename TOutput::storage_type(0));
 	}
 };
 
